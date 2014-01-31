@@ -3,19 +3,15 @@
  /**
   * An example BrennyBot plugin structure. Each of the methods included are
   * called at the times specified in the comments. All methods are optional.
+	* @see PluginAbstract
   */
-class ExamplePlugin {
+class ExamplePlugin extends PluginAbstract {
 
- /**
-  * Contains a reference to the main bot instance to enable the plugin to
-  * interact with the bot's public methods / plugin API.
-	*/
-	protected $_controller;
 
  /**
   * Constructor. Called when the plugin is first loaded by the bot. Activity
-	* required before the plugin receives any information from the IRC server
-  * should be done here.
+  * required before the plugin receives any information from the IRC server
+  * should be done here. Should call super($controller).
   *
   * @param $config mixed The configuration element matching the plugin name will
   *                      be passed here. If there isn't one then null will be
@@ -24,7 +20,7 @@ class ExamplePlugin {
   */
 	function __construct($config, &$controller) {
 
-		$this->_controller = $controller;
+		super($controller);
 	
 	}
 	
@@ -32,7 +28,7 @@ class ExamplePlugin {
   * Destructor. Called when the plugin is shut down by the bot; usually because
   * the bot is going offline or restarting, but possibly because the plugins are
   * being reloaded. Tidy up, clear locks, disconnect from APIs and databases
-  * here.
+  * here. Do NOT unset the _controller instance variable.
   */
 	function __destruct() {
 	
@@ -48,8 +44,6 @@ class ExamplePlugin {
   */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 	
-		echo 'channel';
-	
 	}
 
  /**
@@ -61,8 +55,6 @@ class ExamplePlugin {
   */
 	public function private_message(array $fromDetails, $message) {
 	
-		$this->_controller->send_data('WHOIS ConfuzzledDuck');
-
 	}
 	
  /**
@@ -71,8 +63,6 @@ class ExamplePlugin {
   * @param $message string The full message.
   */
 	public function data_message($message) {
-	
-		echo 'data';
 
 	}
 	
@@ -82,8 +72,6 @@ class ExamplePlugin {
   * carried out here.
   */
 	public function tick() {
-	
-		echo 'tick';
 	
 	}
 	
