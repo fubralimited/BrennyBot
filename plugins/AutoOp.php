@@ -1,13 +1,13 @@
 <?php
 
-class AutoOp {
+class AutoOp extends PluginAbstract {
 
-	protected $_controller;
 	protected $_rules = array();
 
-	function __construct($config, $controller) {
+	function __construct($config, &$controller) {
 
-		$this->_controller = $controller;
+	 // Call parent constructor...
+		super($controller);
 		
 	 // Do a little tidying on the configuration array if required...
 		foreach ($config AS $channel => $users) {

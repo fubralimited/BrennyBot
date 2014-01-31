@@ -1,12 +1,13 @@
 <?php
 
-class ChannelLogger {
+class ChannelLogger extends PluginAbstract {
 
-	protected $_controller;
+	function __construct($config, &$controller) {
 
-	function __construct($config, $controller) {
-	
-		$this->_controller = $controller;
+	 // Call parent constructor...
+		super($controller);
+		
+	 // Make the bot join all the channels we're going to log...
 		$this->_controller->add_bot_channel($config);
 
 	}
