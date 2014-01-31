@@ -1,52 +1,86 @@
 <?php
 
+ /**
+  * An example BrennyBot plugin structure. Each of the methods included are
+  * called at the times specified in the comments. All methods are optional.
+  */
 class ExamplePlugin {
 
-	// Instance variable holding the controlling bot instance
+ /**
+  * Contains a reference to the main bot instance to enable the plugin to
+  * interact with the bot's public methods / plugin API.
+	*/
 	protected $_controller;
 
-	// Called when the plugin is first loaded
-	// $config - plugin configuration
-	// $controller - instance of the controlling Bot
-	function __construct($config, $controller) {
+ /**
+  * Constructor. Called when the plugin is first loaded by the bot. Activity
+	* required before the plugin receives any information from the IRC server
+  * should be done here.
+  *
+  * @param $config mixed The configuration element matching the plugin name will
+  *                      be passed here. If there isn't one then null will be
+  *                      passed.
+  * @param $controller BrennyBot Reference to the controlling instance.
+  */
+	function __construct($config, &$controller) {
 
 		$this->_controller = $controller;
 	
 	}
 	
-	// Called when the plugin is shutdown, usually because the bot is going offline
+ /**
+  * Destructor. Called when the plugin is shut down by the bot; usually because
+  * the bot is going offline or restarting, but possibly because the plugins are
+  * being reloaded. Tidy up, clear locks, disconnect from APIs and databases
+  * here.
+  */
 	function __destruct() {
 	
 	}
 	
-	// Called when a message is posted to the channel the bot is in.
-	// $fromDetails - array of [0] nickname; [1] ident
-	// $channelName - name of channel with leading #
-	// $message - the message sent to the channel
+ /**
+  * Called when a message is posted to a channel that the bot is in.
+  * 
+  * @param $fromDetails array Details of the user the message comes from. See
+  *                           BrennyBot::parse_user_ident() for details.
+  * @param $channelName string Channel the message was posted in.
+  * @param $message string The actual message.
+  */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 	
 		echo 'channel';
 	
 	}
 
-	// Called when a message is sent directly to the bot.
-	// $fromDetails - array of [0] nickname; [1] ident
-	// $message - the message sent to the bot
+ /**
+  * Called when a message is sent directly to the bot.
+  *
+  * @param $fromDetails array Details of the user the message comes from. See
+  *                           BrennyBot::parse_user_ident() for details.
+  * @param $message string The actual message.
+  */
 	public function private_message(array $fromDetails, $message) {
 	
 		$this->_controller->send_data('WHOIS ConfuzzledDuck');
 
 	}
 	
-	// Called when a system message (other than PING and ERROR) is recieved
-	// $message - the full message sent to the bot
+ /**
+  * Called when a system message (other than PING and ERROR) is received.
+  *
+  * @param $message string The full message.
+  */
 	public function data_message($message) {
 	
 		echo 'data';
 
 	}
 	
-	// Called on every loop around main (roughtly every 0.25 seconds)
+ /**
+  * Called on every loop around BrennyBot::main() (roughly every 0.25 seconds).
+  * Any activity which does not require or respond to server input should be
+  * carried out here.
+  */
 	public function tick() {
 	
 		echo 'tick';
