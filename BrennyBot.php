@@ -3,48 +3,48 @@
 class BrennyBot {
 
  /**
-	* Socket connection to IRC server.
-	*/
+  * Socket connection to IRC server.
+  */
 	protected $_connection;
  /**
-	* Boolean flag indicating if the server has accepted and completed our log in.
-	*/
+  * Boolean flag indicating if the server has accepted and completed our log in.
+  */
 	protected $_loginComplete = false;
 	
  /**
-	* Currently loaded bot configuration.
-	*/
+  * Currently loaded bot configuration.
+  */
 	protected $_config;
  /**
-	* Array of channels the bot has been told to be in, and the current status:
-	*   channelname => boolean; true if in the channel, false if not
-	*/
+  * Array of channels the bot has been told to be in, and the current status:
+  *   channelname => boolean; true if in the channel, false if not
+  */
 	protected $_channels = array();
  /**
-	* Array of plugins currently loaded. The instances themselves.
-	*/
+  * Array of plugins currently loaded. The instances themselves.
+  */
 	protected $_plugins = array();
 
  /**
-	* The time, as a unix timestamp, that the bot loaded.
-	*/
-	public $startupTime;
+  * The time, as a unix timestamp, that the bot loaded.
+  */
+  public $startupTime;
 	
  /* Magic methods. */
 
  /**
-	* Constructor. Sets the startup config, connects to server, logs in and starts
-	* the main plugin routine.
-	*
-	* Configuration array must contain:
-	*   server => hostname of server to connect to
-	*   port => port to connect on
-	*   username => name (for username@hostname in WHOIS)
-	*   nickname => actual nickname the bot will use
-	*
-	* @param $config array Configuration array. See above.
-	* @see BrennyBot::load_config()
-	*/
+  * Constructor. Sets the startup config, connects to server, logs in and starts
+  * the main plugin routine.
+  *
+  * Configuration array must contain:
+  *   server => hostname of server to connect to
+  *   port => port to connect on
+  *   username => name (for username@hostname in WHOIS)
+  *   nickname => actual nickname the bot will use
+  *
+  * @param $config array Configuration array. See above.
+  * @see BrennyBot::load_config()
+  */
 	public function __construct(array $config) {
 	
 		set_time_limit(0);
@@ -68,8 +68,8 @@ class BrennyBot {
 	}
 	
  /**
-	* Destructor. Shuts down the bot: notifies the plugins before termination.
-	*/
+  * Destructor. Shuts down the bot: notifies the plugins before termination.
+  */
 	public function __destruct() {
 
 	 // Shutdown each of the plugins...
@@ -82,9 +82,9 @@ class BrennyBot {
  /* Private methods. */
 	
  /**
-	* The body of the bot. Deals with PING and ERROR directly then hands parsed
-	* messages off to the plugin system to do whatever else they need to do.
-	*/
+  * The body of the bot. Deals with PING and ERROR directly then hands parsed
+  * messages off to the plugin system to do whatever else they need to do.
+  */
 	private function _main() {
 	
 		while (true) {
@@ -171,11 +171,11 @@ class BrennyBot {
 	}
 	
  /**
-	* Handles server PING/PONG.
-	*
-	* @param $serverData array Exploded array of the data line from the server.
-	* @return boolean True if the given message was a PING (and therefore was replied to); false otherwise.
-	*/
+  * Handles server PING/PONG.
+  *
+  * @param $serverData array Exploded array of the data line from the server.
+  * @return boolean True if the given message was a PING (and therefore was replied to); false otherwise.
+  */
 	private function _handle_server_ping(array $serverData) {
 
 		if ($serverData[0] == 'PING') {
@@ -188,11 +188,11 @@ class BrennyBot {
 	}
 
  /**
-	* Handles server ERROR. Checks if the given message is an ERROR message, and
-	* if so shuts down the bot.
-	*
-	* @param $serverData array Exploded array of the data line from the server.
-	*/
+  * Handles server ERROR. Checks if the given message is an ERROR message, and
+  * if so shuts down the bot.
+  *
+  * @param $serverData array Exploded array of the data line from the server.
+  */
 	private function _handle_server_error(array $serverData) {
 
 		if ($serverData[0] == 'ERROR') {
@@ -203,11 +203,11 @@ class BrennyBot {
 	}
 	
  /**
-	* Loads all plugins found in the given directory (defaults to plugins/ from
-	* the bot's main directory).
-	*
-	* @param $pluginDirectory string The location to load plugins from. Defaults to 'plugins'.
-	*/
+  * Loads all plugins found in the given directory (defaults to plugins/ from
+  * the bot's main directory).
+  *
+  * @param $pluginDirectory string The location to load plugins from. Defaults to 'plugins'.
+  */
 	private function _load_plugins($pluginDirectory = 'plugins') {
 	
 		if ($handle = @opendir($pluginDirectory)) {
@@ -235,12 +235,12 @@ class BrennyBot {
  /* Protected methods. */
  
  /**
-	* Connects to the given IRC server.
-	*
-	* @param $server string Hostname of server to connect to.
-	* @param $port string Port of server to connect to.
-	* @return boolean True on success; false otherwise.
-	*/
+  * Connects to the given IRC server.
+  *
+  * @param $server string Hostname of server to connect to.
+  * @param $port string Port of server to connect to.
+  * @return boolean True on success; false otherwise.
+  */
 	protected function _connect($server, $port) {
 
 		if (false !== ($this->_connection = stream_socket_client($server.':'.$port))) {
@@ -254,19 +254,19 @@ class BrennyBot {
 	}
 	
  /**
-	* Disconnects from the given IRC server.
-	*/
+  * Disconnects from the given IRC server.
+  */
 	protected function _disconnect() { }
 	
  /**
-	* Logs in to the currently connected IRC server. Note: this method returning
-	* true does not necessarily mean that the login was successful.
-	*
-	* @param $username string Username to use.
-	* @param $nickname string Nickname to use.
-	* @param $password string Password to use to authenticate (optional).
-	* @return boolean True if the login commands were sent to the server successfully; false if it is not.
-	*/
+  * Logs in to the currently connected IRC server. Note: this method returning
+  * true does not necessarily mean that the login was successful.
+  *
+  * @param $username string Username to use.
+  * @param $nickname string Nickname to use.
+  * @param $password string Password to use to authenticate (optional).
+  * @return boolean True if the login commands were sent to the server successfully; false if it is not.
+  */
 	protected function _login($username, $nickname, $password = null) {
 	
 	  if ($this->is_connected()) {
@@ -283,13 +283,13 @@ class BrennyBot {
 	}
 	
  /**
-	* Joins a channel on the currently connected IRC server. Note: this method
-	* returning true does not necessarily mean that the bot actually entered the
-	* channel.
-	*
-	* @param $channelName string Name of channel to join. Agnostic of leading #.
-	* @return boolean True if join message was successfully sent to the server; false if not.
-	*/
+  * Joins a channel on the currently connected IRC server. Note: this method
+  * returning true does not necessarily mean that the bot actually entered the
+  * channel.
+  *
+  * @param $channelName string Name of channel to join. Agnostic of leading #.
+  * @return boolean True if join message was successfully sent to the server; false if not.
+  */
 	protected function _join_channel($channelName) {
 	
 		if (is_string($channelName)) {
@@ -302,10 +302,10 @@ class BrennyBot {
 	}
 	
  /**
-	* Fetches a line of data from the currently connected server.
-	*
-	* @return string|boolean A line of data from the IRC server on success; false otherwise.
-	*/
+  * Fetches a line of data from the currently connected server.
+  *
+  * @return string|boolean A line of data from the IRC server on success; false otherwise.
+  */
 	protected function _get_data() {
 
 	  if ($this->is_connected()) {
@@ -320,9 +320,9 @@ class BrennyBot {
 	}
 
  /**
-	* Writes a line to the log. Currently this is simply echoed to standard out
-	* (ie. the terminal).
-	*/
+  * Writes a line to the log. Currently this is simply echoed to standard out
+  * (ie. the terminal).
+  */
 	protected function _log($message, $mode = 'msg') {
 
 		switch ($mode) {
@@ -342,10 +342,10 @@ class BrennyBot {
  /* Public methods. Plugin API. */
  
  /**
-	* Checks to see if the bot is currently connected to a server.
-	*
-	* @return boolean True if the bot is connected; false if it is not.
-	*/
+  * Checks to see if the bot is currently connected to a server.
+  *
+  * @return boolean True if the bot is connected; false if it is not.
+  */
 	public function is_connected() {
 
 		if (null == $this->_connection) {
@@ -357,16 +357,16 @@ class BrennyBot {
 	}
  
  /**
-	* Loads (or reloads) the given configuration in-flight.
-	*
-	* Configuration array must contain:
-	*   server => hostname of server to connect to
-	*   port => port to connect on
-	*   username => name (for username@hostname in WHOIS)
-	*   nickname => actual nickname the bot will use
-	*
-	* @param $config array Configuration array. See above.
-	*/
+  * Loads (or reloads) the given configuration in-flight.
+  *
+  * Configuration array must contain:
+  *   server => hostname of server to connect to
+  *   port => port to connect on
+  *   username => name (for username@hostname in WHOIS)
+  *   nickname => actual nickname the bot will use
+  *
+  * @param $config array Configuration array. See above.
+  */
 	public function load_config(array $config) {
 
 		$this->_config = $config;
@@ -374,14 +374,14 @@ class BrennyBot {
 	}
 	
  /**
-	* Sends data to the connected IRC server. If a string is given then a single
-	* line is sent, if an array of strings is given then each line is sent
-	* individually. If there is an error sending one of the lines, no further
-	* lines will be sent.
-	*
-	* @param $messages string|array Message or messages to send.
-	* @return boolean True if all messages are sent to the server; false otherwise.
-	*/
+  * Sends data to the connected IRC server. If a string is given then a single
+  * line is sent, if an array of strings is given then each line is sent
+  * individually. If there is an error sending one of the lines, no further
+  * lines will be sent.
+  *
+  * @param $messages string|array Message or messages to send.
+  * @return boolean True if all messages are sent to the server; false otherwise.
+  */
 	public function send_data($messages) {
 
 	  if (is_string($messages)) {
@@ -404,23 +404,23 @@ class BrennyBot {
 	}
 
  /**
-	* Restarts all currently loaded plugins, and loads in any new plugins found in
-	* the plugins directory.
-	*
-	* The following actions are carried out:
-	*  1. Currently loaded plugins are gracefully shut down
-	*  2. The new configuration array is loaded, if given
-	*  3. Plugins which were running previously are restarted with the new
-	*     configuration but are NOT reloaded from source (ie. code changes made to
-	*     the plugin files will not be loaded)
-	*  4. Any new plugin files found in the plugins directory are loaded.
-	*
-	* Note: plugins cannot be unloaded. The bot must be restarted in order to stop
-	* a plugin from operating or load changes in plugin code.
-	*
-	* @param $newConfig array Configuration array. See load_config();
-	* @see BrennyBot::load_config()
-	*/
+  * Restarts all currently loaded plugins, and loads in any new plugins found in
+  * the plugins directory.
+  *
+  * The following actions are carried out:
+  *  1. Currently loaded plugins are gracefully shut down
+  *  2. The new configuration array is loaded, if given
+  *  3. Plugins which were running previously are restarted with the new
+  *     configuration but are NOT reloaded from source (ie. code changes made to
+  *     the plugin files will not be loaded)
+  *  4. Any new plugin files found in the plugins directory are loaded.
+  *
+  * Note: plugins cannot be unloaded. The bot must be restarted in order to stop
+  * a plugin from operating or load changes in plugin code.
+  *
+  * @param $newConfig array Configuration array. See load_config();
+  * @see BrennyBot::load_config()
+  */
 	public function restart_plugins($newConfig = null) {
 
 	 // Shutdown each of the plugins...
@@ -439,11 +439,11 @@ class BrennyBot {
 	}
 	
  /**
-	* Adds the bot to a channel(s). The bot will attemt to join the given
-	* channel(s).
-	*
-	* @param $channels array|string The channel(s) to joing. Agnostic of leading #.
-	*/
+  * Adds the bot to a channel(s). The bot will attemt to join the given
+  * channel(s).
+  *
+  * @param $channels array|string The channel(s) to joing. Agnostic of leading #.
+  */
 	public function add_bot_channel($channels) {
 	
 		if (is_string($channels)) {
@@ -462,16 +462,16 @@ class BrennyBot {
  /* Public helper methods. */
 
  /**
-	* Parses a user ident as sent by the server.
-	*
-	* Returns an array containing:
-	*   [0] => full ident as given in $userIdent (nickname!~username@remote.host)
-	*   [1] => user nickname (nickname)
-	*   [2] => user ident (~username@remote.host)
-	*
-	* @param $userIdent string User ident as sent by the server.
-	* @return array Broken down elements of the ident. See above.
-	*/
+  * Parses a user ident as sent by the server.
+  *
+  * Returns an array containing:
+  *   [0] => full ident as given in $userIdent (nickname!~username@remote.host)
+  *   [1] => user nickname (nickname)
+  *   [2] => user ident (~username@remote.host)
+  *
+  * @param $userIdent string User ident as sent by the server.
+  * @return array Broken down elements of the ident. See above.
+  */
 	public static function parse_user_ident($userIdent) {
 
 		if (preg_match('/:([a-z<_\-\[\]\^\{\}]+)!(.+)/i', $userIdent, $matches)) {
@@ -483,10 +483,10 @@ class BrennyBot {
 	}
 
  /**
-	* Checks the given string for a leading # and adds it if missing.
-	*
-	* @param $channelName string Channel name to process.
-	*/
+  * Checks the given string for a leading # and adds it if missing.
+  *
+  * @param $channelName string Channel name to process.
+  */
 	public static function add_channel_hash($channelName) {
 
 		if ('#' != substr($channelName, 0, 1)) {
