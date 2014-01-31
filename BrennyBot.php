@@ -214,6 +214,7 @@ class BrennyBot {
 		
 			while (false !== ($file = readdir($handle))) {
 				if ('.php' == substr($file, -4)) {
+					require_once($pluginDirectory.'/PluginAbstract.php');
 					@include_once($pluginDirectory.'/'.$file);
 					$pluginName = substr($file, 0, -4);
 					if (class_exists($pluginName)) {
