@@ -1,0 +1,1 @@
+php BrennyBot.php > logs/brennybot.log 2>&1 &

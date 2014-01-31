@@ -1,0 +1,56 @@
+<?php
+
+class ExamplePlugin {
+
+	// Instance variable holding the controlling bot instance
+	protected $_controller;
+
+	// Called when the plugin is first loaded
+	// $config - plugin configuration
+	// $controller - instance of the controlling Bot
+	function __construct($config, $controller) {
+
+		$this->_controller = $controller;
+	
+	}
+	
+	// Called when the plugin is shutdown, usually because the bot is going offline
+	function __destruct() {
+	
+	}
+	
+	// Called when a message is posted to the channel the bot is in.
+	// $fromDetails - array of [0] nickname; [1] ident
+	// $channelName - name of channel with leading #
+	// $message - the message sent to the channel
+	public function channel_message(array $fromDetails, $channelName, $message) {
+	
+		echo 'channel';
+	
+	}
+
+	// Called when a message is sent directly to the bot.
+	// $fromDetails - array of [0] nickname; [1] ident
+	// $message - the message sent to the bot
+	public function private_message(array $fromDetails, $message) {
+	
+		$this->_controller->send_data('WHOIS ConfuzzledDuck');
+
+	}
+	
+	// Called when a system message (other than PING and ERROR) is recieved
+	// $message - the full message sent to the bot
+	public function data_message($message) {
+	
+		echo 'data';
+
+	}
+	
+	// Called on every loop around main (roughtly every 0.25 seconds)
+	public function tick() {
+	
+		echo 'tick';
+	
+	}
+	
+}
