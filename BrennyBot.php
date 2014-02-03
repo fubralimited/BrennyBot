@@ -488,16 +488,22 @@ class BrennyBot {
 	}
 	
  /**
-  * Removes a command from the array of hooked commands implemented by the
-	* currently loaded plugins.
+  * Removes one or more commands from the array of hooked commands implemented
+	* by the currently loaded plugins.
   *
-  * @param $command string Command listened for to remove.
+  * @param $command string|array Command listened for to remove.
   * @return boolean True if the command was in the array and removed, false if not.
   */
-	public function remove_hooked_command($command) {
+	public function remove_hooked_command($commands) {
 
-		if (array_key_exists($command, $this->_hookedCommands)) {
-			unset($this->_hookedCommands[$command]);
+		if (is_string($commands)) {
+			$commands = array($commands);
+		}
+	
+		foreach ($commands AS $command) {
+			if (array_key_exists($command, $this->_hookedCommands)) {
+				unset($this->_hookedCommands[$command]);
+			}
 			return true;
 		}
 

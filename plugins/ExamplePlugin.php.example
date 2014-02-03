@@ -11,7 +11,9 @@ class ExamplePlugin extends PluginAbstract {
  /**
   * Constructor. Called when the plugin is first loaded by the bot. Activity
   * required before the plugin receives any information from the IRC server
-  * should be done here. Should call super($controller).
+  * should be done here. Should call parent::__construct($controller).
+  * Informing the controller about any commands which this plugin responds to
+  * by default should also be done here.
   *
   * @param $config mixed The configuration element matching the plugin name will
   *                      be passed here. If there isn't one then null will be
@@ -29,6 +31,8 @@ class ExamplePlugin extends PluginAbstract {
   * the bot is going offline or restarting, but possibly because the plugins are
   * being reloaded. Tidy up, clear locks, disconnect from APIs and databases
   * here. Do NOT unset the _controller instance variable.
+  * Commands which were added using $this->_controller->add_hooked_command()
+  * should be un-hooked here.
   */
 	function __destruct() {
 	
