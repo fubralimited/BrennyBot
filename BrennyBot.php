@@ -24,6 +24,11 @@ class BrennyBot {
   * Array of plugins currently loaded. The instances themselves.
   */
 	protected $_plugins = array();
+ /**
+  * All the commands which the bot will respond to based on the loaded plugins.
+  *   'command' => brief help description
+  */
+	protected $_hookedCommands = array();
 
  /**
   * The time, as a unix timestamp, that the bot loaded.
@@ -459,6 +464,57 @@ class BrennyBot {
 				$this->_channels[$channel] = false;
 			}
 		}
+	
+	}
+
+ /**
+  * Adds a command to the array of hooked commands implemented by the currently
+	* loaded plugins. If the command is already in the array it will not be over-
+	* written, but rather the method will return false.
+  *
+  * @param $command string Command listened for to add.
+  * @param $description string What the command will actually do.
+  * @return boolean True if the command was added, false if not.
+  */
+	public function add_hooked_command($command, $description) {
+	
+		if (!array_key_exists($command, $this->_hookedCommands)) {
+			$this->_hookedCommands[$command] = $description;
+			return true;
+		}
+
+		return false;
+	
+	}
+	
+ /**
+  * Removes a command from the array of hooked commands implemented by the
+	* currently loaded plugins.
+  *
+  * @param $command string Command listened for to remove.
+  * @return boolean True if the command was in the array and removed, false if not.
+  */
+	public function remove_hooked_command($command) {
+
+		if (array_key_exists($command, $this->_hookedCommands)) {
+			unset($this->_hookedCommands[$command]);
+			return true;
+		}
+
+		return false;
+
+	}
+	
+ /**
+  * Returns all currently registered commands implemented by the currently
+  * loaded plugins. The returned array looks like this:
+	*   'command' => Description of the command (what it does)
+  *
+  * @return array Hooked commands. See above.
+  */
+	public function hooked_commands() {
+	
+		return $this->_hookedCommands;
 	
 	}
 	
