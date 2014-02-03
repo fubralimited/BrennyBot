@@ -217,12 +217,14 @@ class BrennyBot {
 					require_once($pluginDirectory.'/PluginAbstract.php');
 					@include_once($pluginDirectory.'/'.$file);
 					$pluginName = substr($file, 0, -4);
-					if (class_exists($pluginName)) {
-						$config = null;
-						if (isset($this->_config[$pluginName])) {
-							$config = $this->_config[$pluginName];
+					if ('PluginAbstract' != $pluginName) {
+						if (class_exists($pluginName)) {
+							$config = null;
+							if (isset($this->_config[$pluginName])) {
+								$config = $this->_config[$pluginName];
+							}
+							$this->_plugins[] = new $pluginName($config, $this);
 						}
-						$this->_plugins[] = new $pluginName($config, $this);
 					}
 				}
 			}

@@ -20,7 +20,7 @@ class ExamplePlugin extends PluginAbstract {
   */
 	function __construct($config, &$controller) {
 
-		super($controller);
+		parent::__construct($controller);
 	
 	}
 	

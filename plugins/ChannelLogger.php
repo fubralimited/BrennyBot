@@ -5,7 +5,7 @@ class ChannelLogger extends PluginAbstract {
 	function __construct($config, &$controller) {
 
 	 // Call parent constructor...
-		super($controller);
+		parent::__construct($controller);
 		
 	 // Make the bot join all the channels we're going to log...
 		$this->_controller->add_bot_channel($config);

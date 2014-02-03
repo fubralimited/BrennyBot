@@ -7,7 +7,7 @@ class AutoOp extends PluginAbstract {
 	function __construct($config, &$controller) {
 
 	 // Call parent constructor...
-		super($controller);
+		parent::__construct($controller);
 		
 	 // Do a little tidying on the configuration array if required...
 		foreach ($config AS $channel => $users) {
