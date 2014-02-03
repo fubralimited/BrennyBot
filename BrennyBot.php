@@ -31,6 +31,15 @@ class BrennyBot {
 	protected $_hookedCommands = array();
 
  /**
+  * Nickname the bot is currently using.
+  */
+	protected $_botNickname;
+ /**
+  * Username the bot is currently using.
+  */
+	protected $_botUsername;
+
+ /**
   * The time, as a unix timestamp, that the bot loaded.
   */
   public $startupTime;
@@ -278,11 +287,16 @@ class BrennyBot {
 	protected function _login($username, $nickname, $password = null) {
 	
 	  if ($this->is_connected()) {
-		  if (null !== $password) {
+
+			if (null !== $password) {
 				$this->send_data('PASS '.$password);
 			}
 			$this->send_data('NICK '.$nickname);
 			$this->send_data('USER '.$username.' 0 *: '.$username);
+
+			$this->_botNickname = $nickname;
+			$this->_botUsername = $username;
+			
 			return true;
 		} else {
 			return false;
@@ -464,6 +478,28 @@ class BrennyBot {
 				$this->_channels[$channel] = false;
 			}
 		}
+	
+	}
+	
+ /**
+  * Returns the bot's current nickname.
+  *
+  * @return string The bot's current nickname.
+  */
+	public function get_nickname() {
+
+	  return $this->_botNickname;
+
+	}
+	
+ /**
+  * Returns the bot's current username.
+  *
+  * @return string The bot's current username.
+  */
+	public function get_username() {
+	
+	  return $this->_botUsername;
 	
 	}
 
