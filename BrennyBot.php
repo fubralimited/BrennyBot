@@ -469,27 +469,27 @@ class BrennyBot {
 
  /**
   * Adds a command to the array of hooked commands implemented by the currently
-	* loaded plugins. If the command is already in the array it will not be over-
-	* written, but rather the method will return false.
+  * loaded plugins. If the command is already in the array it will not be over-
+  * written, but rather the method will return false.
   *
   * @param $command string Command listened for to add.
   * @param $description string What the command will actually do.
   * @return boolean True if the command was added, false if not.
   */
 	public function add_hooked_command($command, $description) {
-	
+
 		if (!array_key_exists($command, $this->_hookedCommands)) {
 			$this->_hookedCommands[$command] = $description;
 			return true;
 		}
 
 		return false;
-	
+
 	}
-	
+
  /**
   * Removes one or more commands from the array of hooked commands implemented
-	* by the currently loaded plugins.
+  * by the currently loaded plugins.
   *
   * @param $command string|array Command listened for to remove.
   * @return boolean True if the command was in the array and removed, false if not.
@@ -499,7 +499,7 @@ class BrennyBot {
 		if (is_string($commands)) {
 			$commands = array($commands);
 		}
-	
+
 		foreach ($commands AS $command) {
 			if (array_key_exists($command, $this->_hookedCommands)) {
 				unset($this->_hookedCommands[$command]);
@@ -510,18 +510,18 @@ class BrennyBot {
 		return false;
 
 	}
-	
+
  /**
   * Returns all currently registered commands implemented by the currently
   * loaded plugins. The returned array looks like this:
-	*   'command' => Description of the command (what it does)
+  *   'command' => Description of the command (what it does)
   *
   * @return array Hooked commands. See above.
   */
 	public function hooked_commands() {
-	
+
 		return $this->_hookedCommands;
-	
+
 	}
 	
  /* Public helper methods. */
