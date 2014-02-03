@@ -2,6 +2,9 @@
 
 class Help extends PluginAbstract {
 
+ /**
+  * Sets up the _controller instance variable and registers the !help command.
+  */
 	function __construct($config, &$controller) {
 
 		parent::__construct($controller);
@@ -10,12 +13,18 @@ class Help extends PluginAbstract {
 
 	}
 
+ /**
+  * De-registers the !help command.
+  */
 	function __destruct() {
 
 		$this->_controller->remove_hooked_command('!help');
 
 	}
 
+ /**
+  * Handles the reciept of a !help message in channels.
+  */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 
 		if ('!help' == $message) {
@@ -28,6 +37,9 @@ class Help extends PluginAbstract {
 
 	}
 
+ /**
+  * Handles the reciept of a !help message in private messages.
+  */
 	public function private_message(array $fromDetails, $message) {
 
 		if ('!help' == $message) {
@@ -40,6 +52,10 @@ class Help extends PluginAbstract {
 
 	}
 
+ /**
+  * Constructs the response to the !help command based on data available in the
+  * controller and returns it for the listeners to output.
+  */
 	protected function _help_response($message) {
 
 		$response = array();
