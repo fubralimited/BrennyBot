@@ -16,6 +16,9 @@ class BotStatistics extends PluginAbstract {
 	function __construct($config, &$controller) {
 
 		parent::__construct($controller);
+		
+		$this->_controller->add_hooked_command('!memory' => 'Reports the current and peak memory usage of the bot.');
+		$this->_controller->add_hooked_command('!uptime' => 'Reports the current uptime of the bot.');
 
 	}
 
@@ -26,6 +29,8 @@ class BotStatistics extends PluginAbstract {
   * here. Do NOT unset the _controller instance variable.
   */
 	function __destruct() {
+	
+		$this->_controller->remove_hooked_command(array('!memory', '!uptime'));
 
 	}
 
