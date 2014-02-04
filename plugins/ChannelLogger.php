@@ -62,6 +62,10 @@ class ChannelLogger extends PluginAbstract {
 						$this->_write_log($message[2], '['.$fromDetails[1].' gave channel operator status to '.trim($message[4]).']');
 					} else if ('-o' == $message[3]) {
 						$this->_write_log($message[2], '['.$fromDetails[1].' removed channel operator status from '.trim($message[4]).']');
+					} else if ('+v' == $message[3]) {
+						$this->_write_log($message[2], '['.$fromDetails[1].' gave voice to '.trim($message[4]).']');
+					} else if ('-v' == $message[3]) {
+						$this->_write_log($message[2], '['.$fromDetails[1].' removed voice from '.trim($message[4]).']');
 					}
 				break;
 			}
