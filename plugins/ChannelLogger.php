@@ -68,6 +68,10 @@ class ChannelLogger extends PluginAbstract {
 						$this->_write_log($message[2], '['.$fromDetails[1].' removed voice from '.trim($message[4]).']');
 					}
 				break;
+				case 'TOPIC':
+					$newTopic = trim(substr(implode(' ', array_slice($message, 3)), 1));
+					$this->_write_log($message[2], '['.$fromDetails[1].' set the topic to: '.$newTopic.']');
+				break;
 			}
 		}
 
