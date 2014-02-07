@@ -4,6 +4,8 @@ class ChannelLogger extends PluginAbstract {
 
 	protected $_logDir;
 	protected $_channels;
+	
+	protected $_channelUsers = array();
 
 	function __construct($config, &$controller) {
 
@@ -25,6 +27,12 @@ class ChannelLogger extends PluginAbstract {
 		$this->_controller->add_bot_channel($config['channels']);
 
 	}
+	
+	public function join_channel($channelName) {
+
+		$this->_channelUsers[$channelName] = array();
+
+	}
 
 	public function channel_message(array $fromDetails, $channelName, $message) {
 	
@@ -39,23 +47,30 @@ class ChannelLogger extends PluginAbstract {
 	public function data_message($message) {
 
 		if (isset($message[1])) {
-			if (':#' == substr($message[2], 0, 2)) {
-				$channelName = trim(substr($message[2], 1));
-			} else {
-				$channelName = trim($message[2]);
+			if ($this->_controller->get_nickname() != $message[2]) {
+				if (':#' == substr($message[2], 0, 2)) {
+					$channelName = trim(substr($message[2], 1));
+				} else {
+					$channelName = trim($message[2]);
+				}
 			}
 			$fromDetails = $this->_controller->parse_user_ident($message[0]);
 
 			switch ($message[1]) {
+			
+				// Channel related notices...
 			  case 'JOIN':
 					$this->_write_log($channelName, '['.$fromDetails[1].' joined chat]');
+					$this->_add_nick_to_channel($channelName, $fromDetails[1]);
 				break;
 				case 'PART':
 					$this->_write_log($channelName, '['.$fromDetails[1].' left chat]');
+					$this->_remove_nick_from_channel($channelName, $fromDetails[1]);
 				break;
 				case 'KICK':
 					$kickMessage = trim(substr(implode(' ', array_slice($message, 4)), 1));
 					$this->_write_log($channelName, '['.$fromDetails[1].' kicked '.$message[3].': \''.$kickMessage.'\']');
+					$this->_remove_nick_from_channel($channelName, $fromDetails[1]);
 				break;
 				case 'MODE':
 					if ('+o' == $message[3]) {
@@ -72,6 +87,20 @@ class ChannelLogger extends PluginAbstract {
 					$newTopic = trim(substr(implode(' ', array_slice($message, 3)), 1));
 					$this->_write_log($message[2], '['.$fromDetails[1].' set the topic to: '.$newTopic.']');
 				break;
+				
+				// Initial channel join user list...
+				case '353':
+					$this->_channelUsers[$message[4]] = array();
+					$message[5] = substr($message[5], 1);
+					foreach (array_slice($message, 5) AS $channelUser) {
+						if ('@' == substr($channelUser, 0, 1)) {
+							$this->_add_nick_to_channel($message[4], substr($channelUser, 1));
+						} else {
+							$this->_add_nick_to_channel($message[4], $channelUser);
+						}
+					}
+				break;
+				
 			}
 		}
 
@@ -88,6 +117,28 @@ class ChannelLogger extends PluginAbstract {
 			return true;
 		}
 
+		return false;
+	
+	}
+	
+	protected function _remove_nick_from_channel($channelName, $nickname) {
+	
+		if (false !== ($channelUserKey = array_search($nickname, $this->_channelUsers[$channelName]))) {
+			unset($this->_channelUsers[$channelName][$channelUserKey]);
+			return true;
+		}
+		
+		return false;
+	
+	}
+	
+	protected function _add_nick_to_channel($channelName, $nickname) {
+	
+		if (!in_array($nickname, $this->_channelUsers[$channelName])) {
+			$this->_channelUsers[$channelName][] = $nickname;
+			return true;
+		}
+		
 		return false;
 	
 	}
