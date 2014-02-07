@@ -1,0 +1,1 @@
+php BrennyBot.php > /dev/null 2>&1 &
