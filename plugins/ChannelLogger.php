@@ -27,6 +27,7 @@ class ChannelLogger extends PluginAbstract {
 		}
 		
 	 // Make the bot join all the channels we're going to log...
+		$this->_channels = $config['channels'];
 		$this->_controller->add_bot_channel($config['channels']);
 		
 	 // Register the !startlog and !stoplog commands...
@@ -52,9 +53,13 @@ class ChannelLogger extends PluginAbstract {
 	public function private_message(array $fromDetails, $message) {
 	
 		if (preg_match('/^!startlog (#.*)$/', $message, $channelMatches)) {
+			$this->_channels[] = $channelMatches[1];
 			$this->_controller->add_bot_channel($channelMatches[1]);
 		} else if (preg_match('/^!stoplog (#.*)$/', $message, $channelMatches)) {
-			$this->_controller->remove_bot_channel($channelMatches[1]);
+			if ($channelKey = array_search($channelMatches[1], $this->_channels)) {
+				$this->_controller->remove_bot_channel($channelMatches[1]);
+				unset($this->_channels[$channelKey]);
+			}
 		}
 	
 	}
@@ -139,15 +144,26 @@ class ChannelLogger extends PluginAbstract {
 
 	}
 	
+ /**
+  * Writes a line to the appropriate log file only if it relates to a channel
+  * which is supposed to be logged. Note: returns false if the channel is not
+  * supposed to be logged as well as if there was an error writing the log line.
+  *
+  * @param $channel string Channel the log line relates to.
+  * @param $message string Message to log.
+  * @return boolean True if the line was written, false if it was not for some reason.
+  */
 	protected function _write_log($channel, $message) {
 	
-		$logDirectory = $this->_logDir.$channel;
-		if (!file_exists($logDirectory)) {
-			mkdir($logDirectory);
-		}
-		
-		if (false !== file_put_contents($logDirectory.'/'.date('Ymd').'.log', '['.date('H:i:s').'] '.$message.PHP_EOL, FILE_APPEND)) {
-			return true;
+		if (in_array($channel, $this->_channels)) {
+			$logDirectory = $this->_logDir.$channel;
+			if (!file_exists($logDirectory)) {
+				mkdir($logDirectory);
+			}
+
+			if (false !== file_put_contents($logDirectory.'/'.date('Ymd').'.log', '['.date('H:i:s').'] '.$message.PHP_EOL, FILE_APPEND)) {
+				return true;
+			}
 		}
 
 		return false;
