@@ -37,6 +37,15 @@ class ExamplePlugin extends PluginAbstract {
 	function __destruct() {
 	
 	}
+
+ /**
+  * Called when the bot joins a new channel.
+  * 
+  * @param $channelName string Channel the bot joined
+  */
+	public function channel_message($channelName) {
+	
+	}
 	
  /**
   * Called when a message is posted to a channel that the bot is in.

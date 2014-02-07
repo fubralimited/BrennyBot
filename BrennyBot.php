@@ -125,6 +125,11 @@ class BrennyBot {
 							if (true !== $inChannel) {
 								$this->_join_channel($channelName);
 								$this->_channels[$channelName] = true;
+								foreach ($this->_plugins AS $plugin) {
+									if (method_exists($plugin, 'join_channel')) {
+										$plugin->join_channel($channelName);
+									}
+								}
 							}
 						}
 					}
