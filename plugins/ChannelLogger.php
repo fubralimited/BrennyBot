@@ -28,13 +28,35 @@ class ChannelLogger extends PluginAbstract {
 		
 	 // Make the bot join all the channels we're going to log...
 		$this->_controller->add_bot_channel($config['channels']);
+		
+	 // Register the !startlog and !stoplog commands...
+		$this->_controller->add_hooked_command('!startlog [#channel]', 'Makes the bot join the specified channel and start logging.');
+		$this->_controller->add_hooked_command('!stoplog [#channel]', 'Makes the bot stop logging and leave the specified channel.');
 
+	}
+	
+	function _destruct() {
+	
+	 // Deregister the !startlog and !stoplog commands...
+		$this->_controller->remove_hooked_command('!startlog [#channel]');
+		$this->_controller->remove_hooked_command('!stoplog [#channel]');
+	
 	}
 	
 	public function join_channel($channelName) {
 
 		$this->_channelUsers[$channelName] = array();
 
+	}
+	
+	public function private_message(array $fromDetails, $message) {
+	
+		if (preg_match('/^!startlog (#.*)$/', $message, $channelMatches)) {
+			$this->_controller->add_bot_channel($channelMatches[1]);
+		} else if (preg_match('/^!stoplog (#.*)$/', $message, $channelMatches)) {
+			$this->_controller->remove_bot_channel($channelMatches[1]);
+		}
+	
 	}
 
 	public function channel_message(array $fromDetails, $channelName, $message) {
