@@ -67,8 +67,16 @@ class ChannelLogger extends PluginAbstract {
 					$this->_write_log($channelName, '['.$fromDetails[1].' left chat]');
 					$this->_remove_nick_from_channel($channelName, $fromDetails[1]);
 				break;
+				case 'QUIT':
+					foreach ($this->_channelUsers AS $channelName => $channelUserList) {
+						if (in_array($fromDetails[1], $channelUserList)) {
+							$this->_write_log($channelName, '['.$fromDetails[1].' quit IRC: '.substr(implode(' ', array_slice($message, 2)), 1).']');
+							$this->_remove_nick_from_channel($channelName, $fromDetails[1]);
+						}
+					}
+				break;
 				case 'KICK':
-					$kickMessage = trim(substr(implode(' ', array_slice($message, 4)), 1));
+					$kickMessage = substr(implode(' ', array_slice($message, 4)), 1);
 					$this->_write_log($channelName, '['.$fromDetails[1].' kicked '.$message[3].': \''.$kickMessage.'\']');
 					$this->_remove_nick_from_channel($channelName, $fromDetails[1]);
 				break;
@@ -84,7 +92,7 @@ class ChannelLogger extends PluginAbstract {
 					}
 				break;
 				case 'TOPIC':
-					$newTopic = trim(substr(implode(' ', array_slice($message, 3)), 1));
+					$newTopic = substr(implode(' ', array_slice($message, 3)), 1);
 					$this->_write_log($message[2], '['.$fromDetails[1].' set the topic to: '.$newTopic.']');
 				break;
 				
