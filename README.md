@@ -57,5 +57,30 @@ Returns the bot's current nickname.
 
 Returns the bot's current username.
 
+#### add_hooked_command($command, $description)
+Adds a command to the array of hooked commands implemented by the currently loaded plugins. If the command is already in the array it will not be over-written, but rather the method will return false.
+
+Return: True if the command was added, false if not.
+
+#### remove_hooked_command($commands)
+Removes one or more commands from the array of hooked commands implemented by the currently loaded plugins. Specify either a string or array of strings.
+
+Return: True if the command was in the array and removed, false if not.
+
+#### hooked_commands()
+Returns all currently registered commands implemented by the currently loaded plugins. The returned array looks like this:
+  'command' => Description of the command (what it does)
+
 ### Bundled / Basic Plugins
 
+#### BotStatistics
+Implements a set of commands to return data and statistics about the current instance of the bot.
+
+* !memory - Reports the current and peak memory usage of the bot.
+* !uptime - Reports the current uptime of the bot.
+
+#### ChannelLogger
+Logs activity in channels.
+
+#### Help
+Adds a command to output all currently registered plugin commands.
