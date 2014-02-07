@@ -329,6 +329,25 @@ class BrennyBot {
 	}
 	
  /**
+  * Leaves a channel on the currently connected IRC server. Note: this method
+  * returning true does not necessarily mean that the bot actually left the
+  * channel.
+  *
+  * @param $channelName string Name of channel to Leave. Agnostic of leading #.
+  * @return boolean True if part message was successfully sent to the server; false if not.
+  */
+	protected function _part_channel($channelName) {
+
+		if (is_string($channelName)) {
+			$channelName = $this->add_channel_hash($channelName);
+			return $this->send_data('PART '.$channelName);
+		}
+
+		return false;
+
+	}
+	
+ /**
   * Fetches a line of data from the currently connected server.
   *
   * @return string|boolean A line of data from the IRC server on success; false otherwise.
@@ -469,7 +488,7 @@ class BrennyBot {
   * Adds the bot to a channel(s). The bot will attemt to join the given
   * channel(s).
   *
-  * @param $channels array|string The channel(s) to joing. Agnostic of leading #.
+  * @param $channels array|string The channel(s) to join. Agnostic of leading #.
   */
 	public function add_bot_channel($channels) {
 	
@@ -484,6 +503,28 @@ class BrennyBot {
 			}
 		}
 	
+	}
+	
+ /**
+  * Removes the bot from a channel(s). The bot will attemt to leave the given
+  * channel(s).
+  *
+  * @param $channels array|string The channel(s) to leave. Agnostic of leading #.
+  */
+	public function remove_bot_channel($channels) {
+
+		if (is_string($channels)) {
+			$channels = array($channels);
+		}
+
+		foreach ($channels AS $channel) {
+			$channel = $this->add_channel_hash($channel);
+			if (array_key_exists($channel, $this->_channels)) {
+				unset($this->_channels[$channel]);
+				$this->_part_channel($channel);
+			}
+		}
+
 	}
 	
  /**
