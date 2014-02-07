@@ -43,7 +43,7 @@ class ExamplePlugin extends PluginAbstract {
   * 
   * @param $channelName string Channel the bot joined
   */
-	public function channel_message($channelName) {
+	public function join_channel($channelName) {
 	
 	}
 	
