@@ -1,5 +1,9 @@
 <?php
 
+ /**
+  * Automatically gives operator privilidges to specified people when they join
+  * the given channels.
+  */
 class AutoOp extends PluginAbstract {
 
 	protected $_rules = array();

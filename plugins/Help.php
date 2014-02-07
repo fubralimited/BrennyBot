@@ -1,5 +1,8 @@
 <?php
 
+ /**
+  * Adds a command to output all currently registered plugin commands.
+  */
 class Help extends PluginAbstract {
 
  /**

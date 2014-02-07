@@ -1,5 +1,9 @@
 <?php
 
+ /**
+  * Contains a set of commands to return data and statistics about the current
+  * instance of the bot.
+  */
 class BotStatistics extends PluginAbstract {
 
 

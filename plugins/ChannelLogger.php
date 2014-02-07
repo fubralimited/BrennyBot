@@ -1,5 +1,8 @@
 <?php
 
+ /**
+  * Logs activity in channels.
+  */
 class ChannelLogger extends PluginAbstract {
 
 	protected $_logDir;
