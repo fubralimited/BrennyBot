@@ -336,8 +336,8 @@ class BrennyBot {
 	protected function _get_data() {
 
 	  if ($this->is_connected()) {
-			if ($serverData = fgets($this->_connection, 2048)) {
-				$this->_log(trim($serverData), 'rx');
+			if ($serverData = trim(fgets($this->_connection, 2048))) {
+				$this->_log($serverData, 'rx');
 			}
 			return $serverData;
 		} else {
