@@ -27,7 +27,9 @@ class ChannelLogger extends PluginAbstract {
 		}
 		
 	 // Make the bot join all the channels we're going to log...
-		$this->_channels = $config['channels'];
+		foreach ($config['channels'] AS $channel) {
+			$this->_channels[] = $this->_controller->add_channel_hash($channel);
+		}
 		$this->_controller->add_bot_channel($config['channels']);
 		
 	 // Register the !startlog and !stoplog commands...
@@ -154,7 +156,7 @@ class ChannelLogger extends PluginAbstract {
   * @return boolean True if the line was written, false if it was not for some reason.
   */
 	protected function _write_log($channel, $message) {
-	
+	var_dump(in_array($channel, $this->_channels), $channel, $this->_channels);
 		if (in_array($channel, $this->_channels)) {
 			$logDirectory = $this->_logDir.$channel;
 			if (!file_exists($logDirectory)) {
