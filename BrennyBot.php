@@ -134,10 +134,6 @@ class BrennyBot {
 						}
 					}
 					
-// TODO: If we were kicked from a room, maybe do something about it
-// (although it will get passed to the plugins anyway, so maybe they should
-//  decide if they care about that and do something...).
-
 	 // Pass messages on to plugins...
 					if (strlen($serverData[0]) > 0) {
 						if (isset($serverData[1]) && ('PRIVMSG' == $serverData[1])) {
@@ -437,7 +433,13 @@ class BrennyBot {
 		if ($this->is_connected() && is_array($messages)) {
 			foreach ($messages AS $message) {
 				$this->_log(trim($message), 'tx');
-				if (!fwrite($this->_connection, trim($message)."\r\n")) {
+				if (fwrite($this->_connection, trim($message)."\r\n")) {
+					foreach ($this->_plugins AS $plugin) {
+						if (method_exists($plugin, 'send_message')) {
+							$plugin->send_message($message);
+						}
+					}
+				} else {
 					$this->_log('Error talking to server.');
 					break;
 				}
