@@ -1,10 +1,10 @@
 <?php
 
  /**
-  * Contains a set of commands to return data and statistics about the current
-  * instance of the bot.
+  * Contains a set of commands to control the bot, as well as get data and
+  * statistics about the current instance of the bot.
   */
-class BotStatistics extends PluginAbstract {
+class BotControl extends PluginAbstract {
 
 
  /**
