@@ -87,5 +87,15 @@ class ExamplePlugin extends PluginAbstract {
 	public function tick() {
 	
 	}
+
+ /**
+  * Called when a message is sent from the bot to the server. Note: the full raw
+  * message is passed to this method.
+  *
+  * @param $message string The full message.
+  */
+	public function send_message($message) {
+	
+	}
 	
 }
