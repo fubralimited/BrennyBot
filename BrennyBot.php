@@ -624,7 +624,7 @@ class BrennyBot {
   */
 	public static function parse_user_ident($userIdent) {
 
-		if (preg_match('/:([a-z<_\-\[\]\^\{\}]+)!(.+)/i', $userIdent, $matches)) {
+		if (preg_match('/:([a-z0-9<_\-\[\]\^\{\}]+)!(.+)/i', $userIdent, $matches)) {
 			return array($matches[0], $matches[1]);
 		}
 
