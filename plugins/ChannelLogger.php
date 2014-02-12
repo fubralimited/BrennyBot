@@ -75,6 +75,14 @@ class ChannelLogger extends PluginAbstract {
 		}
 
 	}
+	
+	public function send_data($message) {
+	
+		if (preg_match('/^PRIVMSG (#.+?) :(.+)$/', $message, $matches)) {
+			$this->_write_log($matches[1], $matches[2]);
+		}
+	
+	}
 
 	public function data_message($message) {
 
@@ -156,7 +164,7 @@ class ChannelLogger extends PluginAbstract {
   * @return boolean True if the line was written, false if it was not for some reason.
   */
 	protected function _write_log($channel, $message) {
-	var_dump(in_array($channel, $this->_channels), $channel, $this->_channels);
+	
 		if (in_array($channel, $this->_channels)) {
 			$logDirectory = $this->_logDir.$channel;
 			if (!file_exists($logDirectory)) {
