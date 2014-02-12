@@ -139,21 +139,22 @@ class BrennyBot {
 						if (isset($serverData[1]) && ('PRIVMSG' == $serverData[1])) {
 						
 	 // Parse details...
-							$fromDetails = $this->parse_user_ident($serverData[0]);
-							$message = trim(substr(implode(' ', array_slice($serverData, 3)), 1));
+							if (false !== ($fromDetails = $this->parse_user_ident($serverData[0]))) {
+								$message = trim(substr(implode(' ', array_slice($serverData, 3)), 1));
 
 	 // Channel messages...
-							if ('#' == substr($serverData[2], 0, 1)) {
-								foreach ($this->_plugins AS $plugin) {
-									if (method_exists($plugin, 'channel_message')) {
-										$plugin->channel_message($fromDetails, $serverData[2], $message);
+								if ('#' == substr($serverData[2], 0, 1)) {
+									foreach ($this->_plugins AS $plugin) {
+										if (method_exists($plugin, 'channel_message')) {
+											$plugin->channel_message($fromDetails, $serverData[2], $message);
+										}
 									}
-								}
 	 // Private messages...
-							} else {
-								foreach ($this->_plugins AS $plugin) {
-									if (method_exists($plugin, 'private_message')) {
-										$plugin->private_message($fromDetails, $message);
+								} else {
+									foreach ($this->_plugins AS $plugin) {
+										if (method_exists($plugin, 'private_message')) {
+											$plugin->private_message($fromDetails, $message);
+										}
 									}
 								}
 							}
