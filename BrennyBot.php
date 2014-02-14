@@ -650,5 +650,16 @@ class BrennyBot {
 }
 
 	 // Run the plugin...
-require_once('config.php');
-$brennyBot = new BrennyBot($config);
+$options = getopt('c::');
+if (isset($options['c']) && false != $options['c']) {
+	$configFile = $options['c'];
+} else {
+	$configFile = 'config.php';
+}
+if (file_exists($configFile)) {
+	require_once($configFile);
+	$brennyBot = new BrennyBot($config);
+} else {
+	echo 'Could not load config file "'.$configFile.'".'.PHP_EOL;
+	exit;
+}
