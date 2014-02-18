@@ -495,14 +495,16 @@ class BrennyBot {
   */
 	public function add_bot_channel($channels) {
 	
-		if (is_string($channels)) {
-			$channels = array($channels);
-		}
-		
-		foreach ($channels AS $channel) {
-			$channel = $this->add_channel_hash($channel);
-			if (!array_key_exists($channel, $this->_channels)) {
-				$this->_channels[$channel] = false;
+		if ($this->is_connected()) {
+			if (is_string($channels)) {
+				$channels = array($channels);
+			}
+
+			foreach ($channels AS $channel) {
+				$channel = $this->add_channel_hash($channel);
+				if (!array_key_exists($channel, $this->_channels)) {
+					$this->_channels[$channel] = false;
+				}
 			}
 		}
 	
@@ -516,15 +518,17 @@ class BrennyBot {
   */
 	public function remove_bot_channel($channels) {
 
-		if (is_string($channels)) {
-			$channels = array($channels);
-		}
+		if ($this->is_connected()) {
+			if (is_string($channels)) {
+				$channels = array($channels);
+			}
 
-		foreach ($channels AS $channel) {
-			$channel = $this->add_channel_hash($channel);
-			if (array_key_exists($channel, $this->_channels)) {
-				unset($this->_channels[$channel]);
-				$this->_part_channel($channel);
+			foreach ($channels AS $channel) {
+				$channel = $this->add_channel_hash($channel);
+				if (array_key_exists($channel, $this->_channels)) {
+					unset($this->_channels[$channel]);
+					$this->_part_channel($channel);
+				}
 			}
 		}
 
