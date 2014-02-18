@@ -434,14 +434,14 @@ class BrennyBot {
 		if ($this->is_connected() && is_array($messages)) {
 			foreach ($messages AS $message) {
 				$this->_log(trim($message), 'tx');
-				if (fwrite($this->_connection, trim($message)."\r\n")) {
+				if (@fwrite($this->_connection, trim($message)."\r\n")) {
 					foreach ($this->_plugins AS $plugin) {
 						if (method_exists($plugin, 'send_message')) {
 							$plugin->send_message($message);
 						}
 					}
 				} else {
-					$this->_log('Error talking to server.');
+					$this->_log(' ** Error talking to server.');
 					break;
 				}
 			}
