@@ -5,8 +5,8 @@
   */
 class ChannelLogger extends PluginAbstract {
 
-	protected $_logDir;
-	protected $_channels;
+	protected $_logDir = null;
+	protected $_channels = array();
 	
 	protected $_channelUsers = array();
 
@@ -33,16 +33,16 @@ class ChannelLogger extends PluginAbstract {
 		$this->_controller->add_bot_channel($config['channels']);
 		
 	 // Register the !startlog and !stoplog commands...
-		$this->_controller->add_hooked_command('!startlog [#channel]', 'Makes the bot join the specified channel and start logging.');
-		$this->_controller->add_hooked_command('!stoplog [#channel]', 'Makes the bot stop logging and leave the specified channel.');
+		$this->_controller->add_hooked_command('!startlog <#channel>', 'Makes the bot join the specified channel and start logging.');
+		$this->_controller->add_hooked_command('!stoplog <#channel>', 'Makes the bot stop logging and leave the specified channel.');
 
 	}
 	
 	function _destruct() {
 	
 	 // Deregister the !startlog and !stoplog commands...
-		$this->_controller->remove_hooked_command('!startlog [#channel]');
-		$this->_controller->remove_hooked_command('!stoplog [#channel]');
+		$this->_controller->remove_hooked_command('!startlog <#channel>');
+		$this->_controller->remove_hooked_command('!stoplog <#channel>');
 	
 	}
 	
@@ -76,10 +76,10 @@ class ChannelLogger extends PluginAbstract {
 
 	}
 	
-	public function send_data($message) {
-	
+	public function send_message($message) {
+
 		if (preg_match('/^PRIVMSG (#.+?) :(.+)$/', $message, $matches)) {
-			$this->_write_log($matches[1], $matches[2]);
+			$this->_write_log($matches[1], $this->_controller->get_nickname().': '.$matches[2]);
 		}
 	
 	}
@@ -170,7 +170,6 @@ class ChannelLogger extends PluginAbstract {
 			if (!file_exists($logDirectory)) {
 				mkdir($logDirectory);
 			}
-
 			if (false !== file_put_contents($logDirectory.'/'.date('Ymd').'.log', '['.date('H:i:s').'] '.$message.PHP_EOL, FILE_APPEND)) {
 				return true;
 			}
