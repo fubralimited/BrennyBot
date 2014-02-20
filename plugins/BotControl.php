@@ -73,6 +73,20 @@ class BotControl extends PluginAbstract {
 
 	}
 	
+ /**
+  * Called when a system message (other than PING and ERROR) is received.
+  *
+  * @param $message string The full message.
+  */
+	public function data_message($message) {
+
+		if (isset($message[1]) && ($message[1] == 'INVITE')) {
+			$channel = substr($message[3], 1);
+			$this->_controller->add_bot_channel($channel);
+		}
+	
+	}
+	
 	protected function _message_response($message) {
 
 		$response = array();
