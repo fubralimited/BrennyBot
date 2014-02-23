@@ -1,1 +1,1 @@
-php BrennyBot.php > logs/brennybot.log 2>&1 &
+php BrennyBot.php -c=$1 > logs/brennybot.log 2>&1 &
