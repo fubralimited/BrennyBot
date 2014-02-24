@@ -79,6 +79,15 @@ class BrennyBot {
 				if (isset($this->_config['server']) && isset($this->_config['port'])) {
 				  if ($this->_connect($this->_config['server'], $this->_config['port'])) {
 						if ($this->_login($this->_config['username'], $this->_config['nickname'])) {
+							if (file_exists('channelstate.tmp')) {
+								$savedChannels = json_decode(trim(file_get_contents('channelstate.tmp')));
+								foreach ($savedChannels AS $channel => $status) {
+								  if ($status == true) {
+										$this->add_bot_channel($channel);
+									}
+								}
+								unlink('channelstate.tmp');
+							}
 							$this->_load_plugins();
 							$this->_main();
 						} else {
@@ -199,7 +208,7 @@ class BrennyBot {
 				}
 				
 			}
-			
+
 		}
 	
 	}
@@ -293,7 +302,25 @@ class BrennyBot {
  /**
   * Disconnects from the given IRC server.
   */
-	protected function _disconnect() { }
+	protected function _disconnect() {
+
+		$this->send_data('QUIT Restarting');
+		fclose($this->_connection);
+
+	}
+
+ /**
+  * Restarts the bot. Attempts to save the current state so the state can be
+  * read in by the constructor on restart.
+  */
+	public function restart() {
+
+		file_put_contents('channelstate.tmp', json_encode($this->_channels));
+		$this->_disconnect();
+		
+		die(exec('sh silent.sh '.$this->_configFile));
+
+	}
 	
  /**
   * Logs in to the currently connected IRC server. Note: this method returning

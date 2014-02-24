@@ -104,6 +104,9 @@ class BotControl extends PluginAbstract {
 				$uptimeSeconds = $uptimeSeconds - ($days * 86400);
 				$response[] = 'Uptime: '.number_format($days).' days '.gmdate('G \h\o\u\r\s i \m\i\n\u\t\e\s s \s\e\c\o\n\d\s', $uptimeSeconds).'.';
 			break;
+			case '!restart':
+				$this->_controller->restart();
+			break;
 			default:
 				return true;
 		}
