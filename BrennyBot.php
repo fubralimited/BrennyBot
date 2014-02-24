@@ -12,6 +12,10 @@ class BrennyBot {
 	protected $_loginComplete = false;
 	
  /**
+  * Configuration file in use, as passed in to the constructor.
+  */
+	protected $_configFile;
+ /**
   * Currently loaded bot configuration.
   */
 	protected $_config;
@@ -50,33 +54,47 @@ class BrennyBot {
   * Constructor. Sets the startup config, connects to server, logs in and starts
   * the main plugin routine.
   *
-  * Configuration array must contain:
+  * The file name / path passed to $configFile must contain an array, $config,
+  * with configuration options. These must be, as a minimum:
   *   server => hostname of server to connect to
   *   port => port to connect on
   *   username => name (for username@hostname in WHOIS)
   *   nickname => actual nickname the bot will use
   *
-  * @param $config array Configuration array. See above.
+  * @param $configFile string Location of configuration file containing $config array. See above.
   * @see BrennyBot::load_config()
   */
-	public function __construct(array $config) {
+	public function __construct($configFile) {
 	
-		set_time_limit(0);
-	
-		$this->load_config($config);
-		$this->startupTime = time();
+		if (file_exists($configFile)) {
+			set_time_limit(0);
 		
-		if (isset($this->_config['server']) && isset($this->_config['port'])) {
-		  if ($this->_connect($this->_config['server'], $this->_config['port'])) {
-				if ($this->_login($this->_config['username'], $this->_config['nickname'])) {
-					$this->_load_plugins();
-					$this->_main();
-				} else {
-					$this->_log('Unable to log in to server');
+			$this->_configFile = $configFile;
+			require_once($this->_configFile);
+			
+			if (isset($config) && is_array($config)) {
+				$this->load_config($config);
+				$this->startupTime = time();
+
+				if (isset($this->_config['server']) && isset($this->_config['port'])) {
+				  if ($this->_connect($this->_config['server'], $this->_config['port'])) {
+						if ($this->_login($this->_config['username'], $this->_config['nickname'])) {
+							$this->_load_plugins();
+							$this->_main();
+						} else {
+							$this->_log('Unable to log in to server');
+						}
+					} else {
+					  $this->_log('Unable to open socket connection to '.$this->_config['server'].':'.$this->_config['port']);
+					}
 				}
 			} else {
-			  $this->_log('Unable to open socket connection to '.$this->_config['server'].':'.$this->_config['port']);
+				echo 'Config file '.$configFile.' does not contain any valid configuration options.';
+				exit();
 			}
+		} else {
+			echo 'Config file '.$configFile.' does not exist.';
+			exit();
 		}
 	
 	}
@@ -661,8 +679,7 @@ if (isset($options['c']) && false != $options['c']) {
 	$configFile = 'config.php';
 }
 if (file_exists($configFile)) {
-	require_once($configFile);
-	$brennyBot = new BrennyBot($config);
+	$brennyBot = new BrennyBot($configFile);
 } else {
 	echo 'Could not load config file "'.$configFile.'".'.PHP_EOL;
 	exit;
