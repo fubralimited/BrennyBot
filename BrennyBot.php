@@ -308,19 +308,6 @@ class BrennyBot {
 		fclose($this->_connection);
 
 	}
-
- /**
-  * Restarts the bot. Attempts to save the current state so the state can be
-  * read in by the constructor on restart.
-  */
-	public function restart() {
-
-		file_put_contents('channelstate.tmp', json_encode($this->_channels));
-		$this->_disconnect();
-		
-		die(exec('sh silent.sh '.$this->_configFile));
-
-	}
 	
  /**
   * Logs in to the currently connected IRC server. Note: this method returning
@@ -494,6 +481,19 @@ class BrennyBot {
 		}
 
 		return false;
+
+	}
+	
+ /**
+  * Restarts the bot. Attempts to save the current state so the state can be
+  * read in by the constructor on restart.
+  */
+	public function restart() {
+
+		file_put_contents('channelstate.tmp', json_encode($this->_channels));
+		$this->_disconnect();
+
+		die(exec('sh silent.sh '.$this->_configFile));
 
 	}
 
