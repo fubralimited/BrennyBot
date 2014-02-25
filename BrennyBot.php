@@ -152,11 +152,7 @@ class BrennyBot {
 							if (true !== $inChannel) {
 								$this->_join_channel($channelName);
 								$this->_channels[$channelName] = true;
-								foreach ($this->_plugins AS $plugin) {
-									if (method_exists($plugin, 'join_channel')) {
-										$plugin->join_channel($channelName);
-									}
-								}
+								$this->_call_plugin_function('join_channel', $channelName);
 							}
 						}
 					}
@@ -171,36 +167,20 @@ class BrennyBot {
 
 	 // Channel messages...
 								if ('#' == substr($serverData[2], 0, 1)) {
-									foreach ($this->_plugins AS $plugin) {
-										if (method_exists($plugin, 'channel_message')) {
-											$plugin->channel_message($fromDetails, $serverData[2], $message);
-										}
-									}
+									$this->_call_plugin_function('channel_message', $fromDetails, $serverData[2], $message);
 	 // Private messages...
 								} else {
-									foreach ($this->_plugins AS $plugin) {
-										if (method_exists($plugin, 'private_message')) {
-											$plugin->private_message($fromDetails, $message);
-										}
-									}
+									$this->_call_plugin_function('private_message', $fromDetails, $message);
 								}
 							}
 						} else {
 	 // Data / non-chat messages...
-							foreach ($this->_plugins AS $plugin) {
-								if (method_exists($plugin, 'data_message')) {
-									$plugin->data_message($serverData);
-								}
-							}
+							$this->_call_plugin_function('data_message', $serverData);
 						}
 					}
 
 	 // Tick the plugins...
-					foreach($this->_plugins as $plugin) {
-						if (method_exists($plugin, 'tick')) {
-							$plugin->tick();
-						}
-					}
+					$this->_call_plugin_function('tick');
 					
 	 // Don't keep bashing away, have a break...
 					usleep(250000);
@@ -302,9 +282,10 @@ class BrennyBot {
  /**
   * Disconnects from the given IRC server.
   */
-	protected function _disconnect() {
+	protected function _disconnect($quitReason = 'Restarting') {
 
-		$this->send_data('QUIT Restarting');
+		$this->_call_plugin_function('send_quit', $quitReason);
+		$this->send_data('QUIT '.$quitReason);
 		fclose($this->_connection);
 
 	}
@@ -414,6 +395,38 @@ class BrennyBot {
 
 	}
 	
+ /**
+  * Calls a method in each of the plugins if that plugin implements the
+  * specified method.
+  *
+  * @param $methodName string The method to call.
+  */
+	protected function _call_plugin_function() {
+
+		if (($argumentCount = func_num_args()) > 0) {
+			$methodName = func_get_arg(0);
+			foreach ($this->_plugins AS $plugin) {
+				if (method_exists($plugin, $methodName)) {
+					switch ($argumentCount) {
+						case 2:
+							$plugin->$methodName(func_get_arg(1));
+						break;
+						case 3:
+							$plugin->$methodName(func_get_arg(1), func_get_arg(2));
+						break;
+						case 4:
+							$plugin->$methodName(func_get_arg(1), func_get_arg(2), func_get_arg(3));
+						break;
+						default:
+							$plugin->$methodName();
+						break;
+					}
+				}
+			}
+		}
+
+	}
+	
  /* Public methods. Plugin API. */
  
  /**
@@ -467,11 +480,7 @@ class BrennyBot {
 			foreach ($messages AS $message) {
 				$this->_log(trim($message), 'tx');
 				if (@fwrite($this->_connection, trim($message)."\r\n")) {
-					foreach ($this->_plugins AS $plugin) {
-						if (method_exists($plugin, 'send_message')) {
-							$plugin->send_message($message);
-						}
-					}
+					$this->_call_plugin_function('send_message', $message);
 				} else {
 					$this->_log(' ** Error talking to server.');
 					break;
@@ -490,6 +499,7 @@ class BrennyBot {
   */
 	public function restart() {
 
+		$this->_call_plugin_function('bot_restart');
 		file_put_contents('channelstate.tmp', json_encode($this->_channels));
 		$this->_disconnect();
 
