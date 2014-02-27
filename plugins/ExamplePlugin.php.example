@@ -97,5 +97,24 @@ class ExamplePlugin extends PluginAbstract {
 	public function send_message($message) {
 	
 	}
+
+ /**
+  * Called when a restart command is recieved by the bot. The method is called
+  * while still connected to the IRC server and in rooms, just before channel
+  * state is saved. Should be used to save data which will be needed when the
+  * plugin starts up again.
+  */
+	public function bot_restart() {
+	
+	}
+
+ /**
+  * Called just before a /QUIT command is sent to the IRC server.
+  *
+  * @param $quitReason string The quit message which will be sent  to the server.
+  */
+	public function send_quit($quitReason) {
+	
+	}
 	
 }
