@@ -618,12 +618,17 @@ class BrennyBot {
   *
   * @param $command string Command listened for to add.
   * @param $description string What the command will actually do.
+  * @param $source string Where the command comes from (plugin name, or whatever).
   * @return boolean True if the command was added, false if not.
   */
-	public function add_hooked_command($command, $description) {
+	public function add_hooked_command($command, $description, $source = 'zzz') {
 
-		if (!array_key_exists($command, $this->_hookedCommands)) {
-			$this->_hookedCommands[$command] = $description;
+		if (!array_key_exists($source, $this->_hookedCommands)) {
+			$this->_hookedCommands[$source] = array();
+		}
+		
+		if (!array_key_exists($source, $this->_hookedCommands[$source])) {
+			$this->_hookedCommands[$source][$command] = $description;
 			return true;
 		}
 
@@ -636,22 +641,29 @@ class BrennyBot {
   * by the currently loaded plugins.
   *
   * @param $command string|array Command listened for to remove.
-  * @return boolean True if the command was in the array and removed, false if not.
+  * @return integer|boolean The number of commands removed, or false if no commands were removed.
   */
 	public function remove_hooked_command($commands) {
 
+		$removedCommands = 0;
 		if (is_string($commands)) {
 			$commands = array($commands);
 		}
 
 		foreach ($commands AS $command) {
-			if (array_key_exists($command, $this->_hookedCommands)) {
-				unset($this->_hookedCommands[$command]);
+			foreach ($this->_hookedCommands AS $source => $hookedCommands) {
+				if (array_key_exists($command, $hookedCommands)) {
+					unset($this->_hookedCommands[$source][$command]);
+					$removedCommands++;
+				}
 			}
-			return true;
 		}
 
-		return false;
+		if ($removedCommands > 0) {
+			return $removedCommands;
+		} else {
+			return false;
+		}
 
 	}
 

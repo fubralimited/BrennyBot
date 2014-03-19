@@ -65,8 +65,10 @@ class Help extends PluginAbstract {
 		$commands = $this->_controller->hooked_commands();
 		if (count($commands) > 0) {
 			$response[] = 'The following commands can be used with '.$this->_controller->get_nickname().':';
-			foreach ($commands AS $command => $description) {
-				$response[] = '  '.$command.' - '.$description;
+			foreach ($commands AS $source => $sourceCommands) {
+				foreach ($sourceCommands AS $command => $description) {
+					$response[] = '  '.$command.' - '.$description;
+				}
 			}
 		} else {
 			$response[] = $this->_controller->get_nickname().' does not respond to any commands.';
