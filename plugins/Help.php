@@ -12,7 +12,7 @@ class Help extends PluginAbstract {
 
 		parent::__construct($controller);
 
-		$this->_controller->add_hooked_command('!help', 'Returns this help information.');
+		$this->_controller->add_hooked_command('!help', 'Returns this help information.', 'help');
 
 	}
 
@@ -30,7 +30,7 @@ class Help extends PluginAbstract {
   */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 
-		if ('!help' == $message) {
+		if ('!help' == substr($message, 0, 5)) {
 			if (is_array($response = $this->_help_response($message))) {
 				foreach ($response AS $responseMessage) {
 					$this->_controller->send_data('PRIVMSG '.$channelName.' :'.$responseMessage);
@@ -45,7 +45,7 @@ class Help extends PluginAbstract {
   */
 	public function private_message(array $fromDetails, $message) {
 
-		if ('!help' == $message) {
+		if ('!help' == substr($message, 0, 5)) {
 			if (is_array($response = $this->_help_response($message))) {
 				foreach ($response AS $responseMessage) {
 					$this->_controller->send_data('PRIVMSG '.$fromDetails[1].' :'.$responseMessage);
