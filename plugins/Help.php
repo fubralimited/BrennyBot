@@ -13,6 +13,7 @@ class Help extends PluginAbstract {
 		parent::__construct($controller);
 
 		$this->_controller->add_hooked_command('!help', 'Returns this help information.', 'help');
+		$this->_controller->add_hooked_command('!help [pluginname]', 'Returns help information for a currently loaded plugin.', 'help');
 
 	}
 
@@ -22,6 +23,7 @@ class Help extends PluginAbstract {
 	function __destruct() {
 
 		$this->_controller->remove_hooked_command('!help');
+		$this->_controller->remove_hooked_command('!help [pluginname]');
 
 	}
 
@@ -61,17 +63,32 @@ class Help extends PluginAbstract {
   */
 	protected function _help_response($message) {
 
-		$response = array();
+		$message = trim($message);
 		$commands = $this->_controller->hooked_commands();
-		if (count($commands) > 0) {
-			$response[] = 'The following commands can be used with '.$this->_controller->get_nickname().':';
+		$response = array();
+		
+		if ('!help' == $message) {
+			$response[] = 'A brief guide to the help available with '.$this->_controller->get_nickname().':';
+			foreach ($commands['help'] AS $command => $description) {
+				$response[] = '  '.$command.' - '.$description;
+			}
+			$response[] = $this->_controller->get_nickname().' has the following plugins installed:';
 			foreach ($commands AS $source => $sourceCommands) {
-				foreach ($sourceCommands AS $command => $description) {
-					$response[] = '  '.$command.' - '.$description;
+				if (('zzz' != $source) && ('help' != $source)) {
+					$response[] = '  '.$source;
 				}
 			}
 		} else {
-			$response[] = $this->_controller->get_nickname().' does not respond to any commands.';
+			if (count($commands) > 0) {
+				$response[] = 'The following commands can be used with '.$this->_controller->get_nickname().':';
+				foreach ($commands AS $source => $sourceCommands) {
+					foreach ($sourceCommands AS $command => $description) {
+						$response[] = '  '.$command.' - '.$description;
+					}
+				}
+			} else {
+				$response[] = $this->_controller->get_nickname().' does not respond to any commands.';
+			}
 		}
 		
 		return $response;
