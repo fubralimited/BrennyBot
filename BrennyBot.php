@@ -61,7 +61,7 @@ class BrennyBot {
   *   username => name (for username@hostname in WHOIS)
   *   nickname => actual nickname the bot will use
   *
-  * @param $configFile string Location of configuration file containing $config array. See above.
+  * @param string $configFile Location of configuration file containing $config array. See above.
   * @see BrennyBot::load_config()
   */
 	public function __construct($configFile) {
@@ -196,7 +196,7 @@ class BrennyBot {
  /**
   * Handles server PING/PONG.
   *
-  * @param $serverData array Exploded array of the data line from the server.
+  * @param array $serverData Exploded array of the data line from the server.
   * @return boolean True if the given message was a PING (and therefore was replied to); false otherwise.
   */
 	private function _handle_server_ping(array $serverData) {
@@ -214,7 +214,7 @@ class BrennyBot {
   * Handles server ERROR. Checks if the given message is an ERROR message, and
   * if so shuts down the bot.
   *
-  * @param $serverData array Exploded array of the data line from the server.
+  * @param array $serverData Exploded array of the data line from the server.
   */
 	private function _handle_server_error(array $serverData) {
 
@@ -229,7 +229,7 @@ class BrennyBot {
   * Loads all plugins found in the given directory (defaults to plugins/ from
   * the bot's main directory).
   *
-  * @param $pluginDirectory string The location to load plugins from. Defaults to 'plugins'.
+  * @param string $pluginDirectory The location to load plugins from. Defaults to 'plugins'.
   */
 	private function _load_plugins($pluginDirectory = 'plugins') {
 	
@@ -263,8 +263,8 @@ class BrennyBot {
  /**
   * Connects to the given IRC server.
   *
-  * @param $server string Hostname of server to connect to.
-  * @param $port string Port of server to connect to.
+  * @param string $server Hostname of server to connect to.
+  * @param string $port Port of server to connect to.
   * @return boolean True on success; false otherwise.
   */
 	protected function _connect($server, $port) {
@@ -294,9 +294,9 @@ class BrennyBot {
   * Logs in to the currently connected IRC server. Note: this method returning
   * true does not necessarily mean that the login was successful.
   *
-  * @param $username string Username to use.
-  * @param $nickname string Nickname to use.
-  * @param $password string Password to use to authenticate (optional).
+  * @param string $username Username to use.
+  * @param string $nickname Nickname to use.
+  * @param string $password Password to use to authenticate (optional).
   * @return boolean True if the login commands were sent to the server successfully; false if it is not.
   */
 	protected function _login($username, $nickname, $password = null) {
@@ -324,7 +324,7 @@ class BrennyBot {
   * returning true does not necessarily mean that the bot actually entered the
   * channel.
   *
-  * @param $channelName string Name of channel to join. Agnostic of leading #.
+  * @param string $channelName Name of channel to join. Agnostic of leading #.
   * @return boolean True if join message was successfully sent to the server; false if not.
   */
 	protected function _join_channel($channelName) {
@@ -343,7 +343,7 @@ class BrennyBot {
   * returning true does not necessarily mean that the bot actually left the
   * channel.
   *
-  * @param $channelName string Name of channel to Leave. Agnostic of leading #.
+  * @param string $channelName Name of channel to Leave. Agnostic of leading #.
   * @return boolean True if part message was successfully sent to the server; false if not.
   */
 	protected function _part_channel($channelName) {
@@ -399,7 +399,7 @@ class BrennyBot {
   * Calls a method in each of the plugins if that plugin implements the
   * specified method.
   *
-  * @param $methodName string The method to call.
+  * @param string $methodName The method to call.
   */
 	protected function _call_plugin_function() {
 
@@ -453,7 +453,7 @@ class BrennyBot {
   *   username => name (for username@hostname in WHOIS)
   *   nickname => actual nickname the bot will use
   *
-  * @param $config array Configuration array. See above.
+  * @param array $config Configuration array. See above.
   */
 	public function load_config(array $config) {
 
@@ -467,7 +467,7 @@ class BrennyBot {
   * individually. If there is an error sending one of the lines, no further
   * lines will be sent.
   *
-  * @param $messages string|array Message or messages to send.
+  * @param string|array $messages Message or messages to send.
   * @return boolean True if all messages are sent to the server; false otherwise.
   */
 	public function send_data($messages) {
@@ -522,7 +522,7 @@ class BrennyBot {
   * Note: plugins cannot be unloaded. The bot must be restarted in order to stop
   * a plugin from operating or load changes in plugin code.
   *
-  * @param $newConfig array Configuration array. See load_config();
+  * @param array $newConfig Configuration array. See load_config();
   * @see BrennyBot::load_config()
   */
 	public function restart_plugins($newConfig = null) {
@@ -546,7 +546,7 @@ class BrennyBot {
   * Adds the bot to a channel(s). The bot will attemt to join the given
   * channel(s).
   *
-  * @param $channels array|string The channel(s) to join. Agnostic of leading #.
+  * @param array|string $channels The channel(s) to join. Agnostic of leading #.
   */
 	public function add_bot_channel($channels) {
 	
@@ -569,7 +569,7 @@ class BrennyBot {
   * Removes the bot from a channel(s). The bot will attemt to leave the given
   * channel(s).
   *
-  * @param $channels array|string The channel(s) to leave. Agnostic of leading #.
+  * @param array|string $channels The channel(s) to leave. Agnostic of leading #.
   */
 	public function remove_bot_channel($channels) {
 
@@ -616,9 +616,9 @@ class BrennyBot {
   * loaded plugins. If the command is already in the array it will not be over-
   * written, but rather the method will return false.
   *
-  * @param $command string Command listened for to add.
-  * @param $description string What the command will actually do.
-  * @param $source string Where the command comes from (plugin name, or whatever).
+  * @param string $command Command listened for to add.
+  * @param string $description What the command will actually do.
+  * @param string $source Where the command comes from (plugin name, or whatever).
   * @return boolean True if the command was added, false if not.
   */
 	public function add_hooked_command($command, $description, $source = 'zzz') {
@@ -640,7 +640,7 @@ class BrennyBot {
   * Removes one or more commands from the array of hooked commands implemented
   * by the currently loaded plugins.
   *
-  * @param $command string|array Command listened for to remove.
+  * @param string|array $command Command listened for to remove.
   * @return integer|boolean The number of commands removed, or false if no commands were removed.
   */
 	public function remove_hooked_command($commands) {
@@ -690,7 +690,7 @@ class BrennyBot {
   *   [1] => user nickname (nickname)
   *   [2] => user ident (~username@remote.host)
   *
-  * @param $userIdent string User ident as sent by the server.
+  * @param string $userIdent User ident as sent by the server.
   * @return array Broken down elements of the ident. See above.
   */
 	public static function parse_user_ident($userIdent) {
@@ -706,7 +706,7 @@ class BrennyBot {
  /**
   * Checks the given string for a leading # and adds it if missing.
   *
-  * @param $channelName string Channel name to process.
+  * @param string $channelName Channel name to process.
   */
 	public static function add_channel_hash($channelName) {
 
