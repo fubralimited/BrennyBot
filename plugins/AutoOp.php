@@ -6,9 +6,22 @@
   */
 class AutoOp extends PluginAbstract {
 
+ /**
+  * Array of rules to obey:
+	*   key => channel name
+	*   value => array of users to auto-op in the [key] channel
+  */
 	protected $_rules = array();
 
-	function __construct($config, &$controller) {
+ /**
+  * Constructor. Tidies up and loads the given config array.
+  *
+  * @see AutoOp::_rules()
+  * @see PluginAbstract::__construct()
+  * @param array $config Configuration details in array.
+  * @param BrennyBot $controller Reference to the controlling instance.
+  */
+	function __construct(array $config, &$controller) {
 
 	 // Call parent constructor...
 		parent::__construct($controller);
@@ -24,6 +37,13 @@ class AutoOp extends PluginAbstract {
 
 	}
 
+ /**
+  * Handles data messages and acts on channel joins: if, according to the
+  * configuration, the user should be auto-opped then carries out the opping.
+  *
+  * @see AutoOp::_rules()
+  * @param string $message The data message to handle.
+  */
 	public function data_message($message) {
 
 		if (isset($message[1]) && ('JOIN' == $message[1])) {
