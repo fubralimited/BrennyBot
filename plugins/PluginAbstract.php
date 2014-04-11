@@ -15,7 +15,7 @@ abstract class PluginAbstract {
  /**
   * Constructor. Assigns the controller reference to the instance variable.
   *
-  * @param $controller BrennyBot Reference to the controlling instance.
+  * @param BrennyBot $controller Reference to the controlling instance.
   */
 	public function __construct(&$controller) {
 
