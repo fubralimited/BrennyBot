@@ -7,6 +7,10 @@ class Help extends PluginAbstract {
 
  /**
   * Sets up the _controller instance variable and registers the !help command.
+	*
+  * @see PluginAbstract::__construct()
+  * @param array $config Configuration details in array.
+  * @param BrennyBot $controller Reference to the controlling instance.
   */
 	function __construct($config, &$controller) {
 
@@ -31,6 +35,10 @@ class Help extends PluginAbstract {
 
  /**
   * Handles the reciept of a !help message in channels.
+  *
+  * @param array $fromDetails Array of details of the message sender. The output from BrennyBot::parse_user_ident().
+  * @param string $channelName The name of channel the message was recieved in.
+  * @param string $message Actual message recieved.
   */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 
@@ -46,6 +54,9 @@ class Help extends PluginAbstract {
 
  /**
   * Handles the reciept of a !help message in private messages.
+  *
+  * @param array $fromDetails Array of details of the message sender. The output from BrennyBot::parse_user_ident().
+  * @param string $message Actual message recieved.
   */
 	public function private_message(array $fromDetails, $message) {
 
@@ -62,6 +73,9 @@ class Help extends PluginAbstract {
  /**
   * Constructs the response to the !help command based on data available in the
   * controller and returns it for the listeners to output.
+  *
+  * @param string $message Messgage recieved by the bot, after it's been parsed for "!help", but including that string.
+  * @return string Message to return to the sender (ie. a help message).
   */
 	protected function _help_response($message) {
 
