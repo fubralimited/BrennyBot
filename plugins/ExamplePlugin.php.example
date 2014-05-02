@@ -15,10 +15,10 @@ class ExamplePlugin extends PluginAbstract {
   * Informing the controller about any commands which this plugin responds to
   * by default should also be done here.
   *
-  * @param $config mixed The configuration element matching the plugin name will
+  * @param mixed $config The configuration element matching the plugin name will
   *                      be passed here. If there isn't one then null will be
   *                      passed.
-  * @param $controller BrennyBot Reference to the controlling instance.
+  * @param BrennyBot $controller Reference to the controlling instance.
   */
 	function __construct($config, &$controller) {
 
@@ -41,7 +41,7 @@ class ExamplePlugin extends PluginAbstract {
  /**
   * Called when the bot joins a new channel.
   * 
-  * @param $channelName string Channel the bot joined
+  * @param string $channelName Channel the bot joined
   */
 	public function join_channel($channelName) {
 	
@@ -52,8 +52,8 @@ class ExamplePlugin extends PluginAbstract {
   * 
   * @param $fromDetails array Details of the user the message comes from. See
   *                           BrennyBot::parse_user_ident() for details.
-  * @param $channelName string Channel the message was posted in.
-  * @param $message string The actual message.
+  * @param string $channelName Channel the message was posted in.
+  * @param string $message The actual message.
   */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 	
@@ -62,9 +62,9 @@ class ExamplePlugin extends PluginAbstract {
  /**
   * Called when a message is sent directly to the bot.
   *
-  * @param $fromDetails array Details of the user the message comes from. See
+  * @param array $fromDetails Details of the user the message comes from. See
   *                           BrennyBot::parse_user_ident() for details.
-  * @param $message string The actual message.
+  * @param string $message The actual message.
   */
 	public function private_message(array $fromDetails, $message) {
 	
@@ -73,7 +73,7 @@ class ExamplePlugin extends PluginAbstract {
  /**
   * Called when a system message (other than PING and ERROR) is received.
   *
-  * @param $message string The full message.
+  * @param string $message The full message.
   */
 	public function data_message($message) {
 
@@ -92,7 +92,7 @@ class ExamplePlugin extends PluginAbstract {
   * Called when a message is sent from the bot to the server. Note: the full raw
   * message is passed to this method.
   *
-  * @param $message string The full message.
+  * @param string $message The full message.
   */
 	public function send_message($message) {
 	
@@ -111,7 +111,7 @@ class ExamplePlugin extends PluginAbstract {
  /**
   * Called just before a /QUIT command is sent to the IRC server.
   *
-  * @param $quitReason string The quit message which will be sent  to the server.
+  * @param string $quitReason The quit message which will be sent  to the server.
   */
 	public function send_quit($quitReason) {
 	
