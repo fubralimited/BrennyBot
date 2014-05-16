@@ -12,10 +12,10 @@ class BotControl extends PluginAbstract {
   * required before the plugin receives any information from the IRC server
   * should be done here. Should call super($controller).
   *
-  * @param $config mixed The configuration element matching the plugin name will
+  * @param mixed $config The configuration element matching the plugin name will
   *                      be passed here. If there isn't one then null will be
   *                      passed.
-  * @param $controller BrennyBot Reference to the controlling instance.
+  * @param BrennyBot $controller Reference to the controlling instance.
   */
 	function __construct($config, &$controller) {
 
@@ -41,10 +41,10 @@ class BotControl extends PluginAbstract {
  /**
   * Called when a message is posted to a channel that the bot is in.
   *
-  * @param $fromDetails array Details of the user the message comes from. See
+  * @param array $fromDetails Details of the user the message comes from. See
   *                           BrennyBot::parse_user_ident() for details.
-  * @param $channelName string Channel the message was posted in.
-  * @param $message string The actual message.
+  * @param string $channelName Channel the message was posted in.
+  * @param string $message The actual message.
   */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 	
@@ -59,9 +59,9 @@ class BotControl extends PluginAbstract {
  /**
   * Called when a message is sent directly to the bot.
   *
-  * @param $fromDetails array Details of the user the message comes from. See
+  * @param array $fromDetails Details of the user the message comes from. See
   *                           BrennyBot::parse_user_ident() for details.
-  * @param $message string The actual message.
+  * @param string $message The actual message.
   */
 	public function private_message(array $fromDetails, $message) {
 	
@@ -76,7 +76,7 @@ class BotControl extends PluginAbstract {
  /**
   * Called when a system message (other than PING and ERROR) is received.
   *
-  * @param $message string The full message.
+  * @param string $message The full message.
   */
 	public function data_message($message) {
 
@@ -87,6 +87,13 @@ class BotControl extends PluginAbstract {
 	
 	}
 	
+ /**
+  * Works out the response to send back to the server on reciept of a valid
+  * command.
+  *
+  * @param string $message The full message.
+  * @return array An array of strings to return to the server. Each element is a single line of response.
+  */
 	protected function _message_response($message) {
 
 		$response = array();
