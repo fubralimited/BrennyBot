@@ -10,6 +10,13 @@ class ChannelLogger extends PluginAbstract {
 	
 	protected $_channelUsers = array();
 
+ /**
+  * Constructor. Sets up logging directory, log array and hooks commands to
+  * help system.
+  *
+  * @param array $config Configuration details in array.
+  * @param BrennyBot $controller Reference to the controlling instance.
+  */
 	function __construct($config, &$controller) {
 
 	 // Call parent constructor...
@@ -38,6 +45,9 @@ class ChannelLogger extends PluginAbstract {
 
 	}
 	
+ /**
+  * De-registers the commands in the help system.
+  */
 	function _destruct() {
 	
 	 // Deregister the !startlog and !stoplog commands...
@@ -46,12 +56,28 @@ class ChannelLogger extends PluginAbstract {
 	
 	}
 	
+ /**
+  * Called when the bot joins a new channel. Adds an empy element to
+  * $this->_channelUsers to take the list of users in the channel.
+  *
+  * @param string $channelName Name of channel joined.
+  */
 	public function join_channel($channelName) {
 
 		$this->_channelUsers[$channelName] = array();
 
 	}
 	
+ /**
+  * Called when a message is sent directly to the bot. Responds to both
+  * !startlog and !stoplog commands. If the bot is not in the channel given with
+  * the !startlog command it joins it. Parts the given channel and stops logging
+  * when sent a !stoplog command.
+  *
+  * @param array $fromDetails Details of the user the message comes from. See
+  *                           BrennyBot::parse_user_ident() for details.
+  * @param string $message The actual message.
+  */
 	public function private_message(array $fromDetails, $message) {
 	
 		if (preg_match('/^!startlog (#.*)$/', $message, $channelMatches)) {
@@ -66,6 +92,15 @@ class ChannelLogger extends PluginAbstract {
 	
 	}
 
+ /**
+  * Called when a message is posted to a channel that the bot is in. Logs all
+  * messages sent to this method.
+  *
+  * @param array $fromDetails Details of the user the message comes from. See
+  *                           BrennyBot::parse_user_ident() for details.
+  * @param string $channelName Channel the message was posted in.
+  * @param string $message The actual message.
+  */
 	public function channel_message(array $fromDetails, $channelName, $message) {
 	
 		if (substr($message, 1, 6) == 'ACTION') {
@@ -76,6 +111,12 @@ class ChannelLogger extends PluginAbstract {
 
 	}
 	
+ /**
+  * Called when a message is sent from the bot to the server. If the outgoing
+  * message is in channel format, the message is logged.
+  *
+  * @param string $message The full message.
+  */
 	public function send_message($message) {
 
 		if (preg_match('/^PRIVMSG (#.+?) :(.+)$/', $message, $matches)) {
@@ -84,6 +125,12 @@ class ChannelLogger extends PluginAbstract {
 	
 	}
 
+ /**
+  * Called when a system message (other than PING and ERROR) is received. If the
+  * message is broadly user related (JOIN, PART, etc.) it will get logged.
+  *
+  * @param string $message The full message.
+  */
 	public function data_message($message) {
 
 		if (isset($message[1])) {
@@ -159,8 +206,8 @@ class ChannelLogger extends PluginAbstract {
   * which is supposed to be logged. Note: returns false if the channel is not
   * supposed to be logged as well as if there was an error writing the log line.
   *
-  * @param $channel string Channel the log line relates to.
-  * @param $message string Message to log.
+  * @param string $channel Channel the log line relates to.
+  * @param string $message Message to log.
   * @return boolean True if the line was written, false if it was not for some reason.
   */
 	protected function _write_log($channel, $message) {
@@ -179,6 +226,13 @@ class ChannelLogger extends PluginAbstract {
 	
 	}
 	
+ /**
+  * Removes a nick from the internal channel user list.
+  *
+  * @param string $channel Channel the user is leaving.
+  * @param string $nickname Nickname to remove.
+  * @return boolean True if user was in the given channel and has been removed, false if not.
+  */
 	protected function _remove_nick_from_channel($channelName, $nickname) {
 	
 		if (false !== ($channelUserKey = array_search($nickname, $this->_channelUsers[$channelName]))) {
@@ -190,6 +244,13 @@ class ChannelLogger extends PluginAbstract {
 	
 	}
 	
+ /**
+  * Adds a nick to the internal channel user list.
+  *
+  * @param string $channel Channel the user is joining.
+  * @param string $nickname Nickname to add.
+  * @return boolean True if user was not already in the given channel and has been added, false if not.
+  */
 	protected function _add_nick_to_channel($channelName, $nickname) {
 	
 		if (!in_array($nickname, $this->_channelUsers[$channelName])) {
