@@ -1,5 +1,11 @@
 <?php
 
+ /**
+  * An IRC bot written in PHP, with a flexible plugin system allowing it to be
+  * extended to carry out tasks and respond to user input. The main bot provides
+  * a number of public methods to interact with the IRC server and get data from
+  * the bot itself.
+	*/
 class BrennyBot {
 
  /**
