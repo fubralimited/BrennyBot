@@ -1,5 +1,24 @@
 <?php
 
+#
+# BrennyBot.php
+#
+# Created by Jonathon Wardman on 07-02-2014.
+# Copyright 2014, Fubra Limited. All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# You may obtain a copy of the License at:
+# http://www.gnu.org/licenses/gpl-3.0.txt
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+
  /**
   * An IRC bot written in PHP, with a flexible plugin system allowing it to be
   * extended to carry out tasks and respond to user input. The main bot provides
