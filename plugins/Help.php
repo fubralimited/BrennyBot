@@ -112,7 +112,7 @@ class Help extends PluginAbstract {
 						$response[] = 'The plugin "'.$helpParts[1].'" is not currently running on '.$this->_controller->get_nickname().':';
 					}
 				} else {
-					$response[] = 'Invalid command.'
+					$response[] = 'Invalid command.';
 				}
 			} else {
 				$response[] = $this->_controller->get_nickname().' does not respond to any commands.';
